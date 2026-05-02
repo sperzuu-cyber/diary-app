@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<div class="container">
+    <div class="card">
+        <h1>Break Loop Diary</h1>
+        <p class="small">Notice it → Name it → Redirect it</p>
+
+        {% if error %}
+            <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST">
+            <label>Username</label>
+            <input name="username" required>
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button>Login</button>
+        </form>
+
+        <p class="small">No account yet? <a href="/register">Create one</a></p>
+        <p><a href="/public">View public entries</a></p>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<div class="nav">
+    <strong>Break Loop Diary</strong>
+    <div>
+        <a href="/entries">My Entries</a>
+        <a href="/public">Public</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h1>New Entry</h1>
+        <p class="small">Turn the noise into data. Then redirect.</p>
+
+        <form method="POST">
+            <label>What happened today that stuck with you?</label>
+            <textarea name="day"></textarea>
+
+            <label>Rate your mood? (1–10)</label>
+            <input name="mood">
+
+            <label>Are you grounded right now?</label>
+            <input name="okay">
+
+            <label>What moment or thought triggered this?</label>
+            <textarea name="trigger"></textarea>
+
+            <label>What story is your mind telling you?</label>
+            <textarea name="thought"></textarea>
+
+            <label>What are you feeling in one word?</label>
+            <input name="feeling">
+
+            <label>How strong is the signal? (1–10)</label>
+            <input name="signal">
+
+            <label>Where do you think this is coming from?</label>
+            <input name="source">
+
+            <label>What pattern is repeating here?</label>
+            <textarea name="loop"></textarea>
+
+            <label>What will you do instead, right now?</label>
+            <textarea name="redirect"></textarea>
+
+            <label>What would your future self say?</label>
+            <textarea name="lesson"></textarea>
+
+            <label>Visibility</label>
+            <select name="visibility">
+                <option value="private">Private</option>
+                <option value="public">Public</option>
+            </select>
+
+            <button>Break the Loop</button>
+        </form>
+    </div>
+</div>

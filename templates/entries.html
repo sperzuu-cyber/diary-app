@@ -1,0 +1,54 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+
+<div class="nav">
+    <strong>Break Loop Diary</strong>
+    <div>
+        <a href="/new">New Entry</a>
+        <a href="/public">Public</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    <h1>My Entries</h1>
+
+{% for e in entries %}
+<div class="card">
+    <span class="badge">{{ e[15] }}</span>
+    <p class="small">{{ e[1] }}</p>
+
+    <p><strong>What happened today that stuck with you?</strong><br>{{ e[2] }}</p>
+
+    <p><strong>Rate your mood? (1–10)</strong><br>{{ e[3] }}/10</p>
+
+    <p><strong>Are you grounded right now?</strong><br>{{ e[4] }}</p>
+
+    <p><strong>What moment or thought triggered this?</strong><br>{{ e[5] }}</p>
+
+    <p><strong>What story is your mind telling you?</strong><br>{{ e[6] }}</p>
+
+    <p><strong>What are you feeling in one word?</strong><br>{{ e[7] }}</p>
+
+    <p><strong>How strong is the signal? (1–10)</strong><br>{{ e[8] }}/10</p>
+
+    <p><strong>Where do you think this is coming from?</strong><br>{{ e[9] }}</p>
+
+    <p><strong>What pattern is repeating here?</strong><br>{{ e[10] }}</p>
+
+    <p><strong>What will you do instead, right now?</strong><br>{{ e[11] }}</p>
+
+    <p><strong>What would your future self say?</strong><br>{{ e[12] }}</p>
+
+    <form method="POST" action="/delete/{{ e[0] }}">
+    <button type="submit" onclick="return confirm('Delete this entry?');">
+        Delete
+    </button>
+</form>
+
+</div>
+
+{% else %}
+<div class="card">
+    <p>No entries yet. Start with one honest sentence.</p>
+</div>
+{% endfor %}

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Break Loop Diary</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0f172a;
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .container {
+            width: 400px;
+            background: #1e293b;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #38bdf8;
+            border: none;
+            border-radius: 8px;
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0ea5e9;
+        }
+
+        a {
+            color: #38bdf8;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Break Loop Diary</h1>
+
+        <form method="POST">
+            How was your day?
+            <input name="day">
+
+            Mood (1-10):
+            <input name="mood">
+
+            Are you okay?
+            <input name="okay">
+
+            What triggered you?
+            <textarea name="trigger"></textarea>
+
+            Main thought - What story is your mind telling you?:
+            <textarea name="thought"></textarea>
+
+            Feeling - What emotions are you feeling?:
+            <input name="feeling">
+
+            Signal strength - How stong is the urge/emotion (1-10)?:
+            <input name="signal">
+
+            Source - Where do you think this is coming from?:
+            <input name="source">
+
+            Loop - What pattern is repeating here?:
+            <input name="loop">
+
+            Redirect - What are you going to do instead?:
+            <input name="redirect">
+
+            Lesson - What would you tell your future self?:
+            <textarea name="lesson"></textarea>
+
+            <button type="submit">Save Entry</button>
+        </form>
+
+        <a href="/entries">View Entries</a>
+    </div>
+</body>
+</html>
