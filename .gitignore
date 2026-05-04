@@ -1,1 +1,4 @@
-.log
+venv/
+*.db
+*.log
+__pycache__/.log
