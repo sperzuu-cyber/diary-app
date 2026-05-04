@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Break Loop</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+
+<body>
+
+<div class="nav">
+    <strong>Break Loop Diary</strong>
+    <div>
+        <a href="/dashboard">Dashboard</a>
+        <a href="/entries">My Entries</a>
+        <a href="/public">Public</a>
+        <a href="/new">New Entry</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>
