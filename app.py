@@ -39,30 +39,6 @@ def init_db():
     """)
 
     c.execute("""
-    CREATE TABLE IF NOT EXISTS entries (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id INTEGER,
-        time TEXT,
-        day TEXT,
-        mood TEXT,
-        okay TEXT,
-        trigger TEXT,
-        thought TEXT,
-        feeling TEXT,
-        signal TEXT,
-        source TEXT,
-        loop TEXT,
-        redirect TEXT,
-        lesson TEXT,
-        visibility TEXT
-    )
-""")
-
-def init_db():
-    conn = db()
-    c = conn.cursor()
-
-    c.execute("""
         CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
