@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h1>Edit Entry</h1>
+    <p class="small">Update the note, mood, or privacy.</p>
+
+    <form method="POST">
+        <label>What happened today that stuck with you?</label>
+        <textarea name="day">{{ entry[2] }}</textarea>
+
+        <label>Rate your mood? (1–10)</label>
+        <input type="number" name="mood" min="1" max="10" value="{{ entry[3] }}" required>
+
+        <label>Are you grounded right now?</label>
+        <input name="okay" value="{{ entry[4] }}">
+
+        <label>What moment or thought triggered this?</label>
+        <textarea name="trigger">{{ entry[5] }}</textarea>
+
+        <label>What story is your mind telling you?</label>
+        <textarea name="thought">{{ entry[6] }}</textarea>
+
+        <label>What are you feeling in one word?</label>
+        <input name="feeling" value="{{ entry[7] }}">
+
+<!-- NOTE changed "how strong is the signal to how strong are your feelings" for UI only -->
+        <label>How strong are your feelings for them right now? (1–10)</label>
+        <input type="number" name="signal" min="1" max="10" value="{{ entry[8] }}">
+
+        <label>Where do you think this is coming from?</label>
+        <input name="source" value="{{ entry[9] }}">
+<!-- Changed loop to tell"from pattern to what do you want to tell this person" -->
+        <label>What do you want to tell this person?</label>
+        <textarea name="loop">{{ entry[10] }}</textarea>
+
+        <label>What will you do instead, right now?</label>
+        <textarea name="redirect">{{ entry[11] }}</textarea>
+
+        <label>What would your future self say?</label>
+        <textarea name="lesson">{{ entry[12] }}</textarea>
+
+        <label>Visibility</label>
+        <select name="visibility">
+            <option value="private" {% if entry[15] == "private" %}selected{% endif %}>Private</option>
+            <option value="public" {% if entry[15] == "public" %}selected{% endif %}>Public</option>
+        </select>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+{% endblock %}
