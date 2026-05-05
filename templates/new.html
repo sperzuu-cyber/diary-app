@@ -6,6 +6,13 @@
         <p class="small">Turn the noise into data. Then redirect.</p>
 
         <form method="POST" enctype="multipart/form-data">
+
+            <label>Upload photo:</label>
+            <input type="file" name="image" accept="image/*">
+
+            <label>Say something about this photo:</label>
+            <textarea name="image_caption" placeholder="Write something about this photo..."></textarea>
+            
             <label>What happened today that stuck with you?</label>
             <textarea name="day"></textarea>
 

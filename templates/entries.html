@@ -1,46 +1,92 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>My Entries</h1>
+<h1>My Entries</h1>
+
+<div class="card">
+    <h2>Photo Drop</h2>
+    <p class="small">Upload a photo and write something about it.</p>
+
+    <form method="POST" action="/upload-photo" enctype="multipart/form-data">
+        <label>Choose photo</label>
+        <input type="file" name="photo" accept="image/*" required>
+
+        <label>Write something about it</label>
+        <textarea name="photo_note" placeholder="What does this photo mean?"></textarea>
+
+        <button type="submit">Upload Photo</button>
+    </form>
+</div>
 
 {% for e in entries %}
 <div class="card">
-    <span class="badge">{{ e[15] }}</span>
-    <p class="small">{{ e[1] }}</p>
 
-{% if e[16] %}
-    <img src="{{ url_for('static', filename='uploads/' + e[16]) }}" class="entry-image">
-{% endif %}
-
-    <p><strong>What happened today that stuck with you?</strong><br>{{ e[2] }}</p>
-
-    <p><strong>Rate your mood? (1–10)</strong><br>{{ e[3] }}/10</p>
-
-    <p><strong>Are you grounded right now?</strong><br>{{ e[4] }}</p>
-
-    <p><strong>What moment or thought triggered this?</strong><br>{{ e[5] }}</p>
-
-    <p><strong>What story is your mind telling you?</strong><br>{{ e[6] }}</p>
-
-    <p><strong>What are you feeling in one word?</strong><br>{{ e[7] }}</p>
-<!-- how strong are the signals changed to how strong are the feelings -->
-    <p><strong>How strong are your feelings for them right now? (1–10)</strong><br>{{ e[8] }}/10</p>
-
-    <p><strong>Where do you think this is coming from?</strong><br>{{ e[9] }}</p>
-<!-- what pattern changed to what do you want to tell this person -->
-    <p><strong>What do you want to tell this person?</strong><br>{{ e[10] }}</p>
-
-    <p><strong>What will you do instead, right now?</strong><br>{{ e[11] }}</p>
-
-    <p><strong>What would your future self say?</strong><br>{{ e[12] }}</p>
     
-    <a class="button-link" href="/edit/{{ e[0] }}">Edit</a>    
+    <span class="badge">{{ e[14] }}</span>
+
+    
+    <p class="small">{{ e[2] }}</p>
+
+   
+    {% if e[15] %}
+        <img src="{{ url_for('static', filename='uploads/' + e[15]) }}" class="entry-image">
+    {% endif %}
+
+    {% if e[16] %}
+        <p><strong>Photo note:</strong><br>{{ e[16] }}</p>
+    {% endif %}
+
+    {% if e[3] %}
+        <p><strong>What happened today that stuck with you?</strong><br>{{ e[3] }}</p>
+    {% endif %}
+
+    {% if e[4] %}
+        <p><strong>Rate your mood? (1–10)</strong><br>{{ e[4] }}/10</p>
+    {% endif %}
+
+    {% if e[5] %}
+        <p><strong>Are you grounded right now?</strong><br>{{ e[5] }}</p>
+    {% endif %}
+
+    {% if e[6] %}
+        <p><strong>What moment or thought triggered this?</strong><br>{{ e[6] }}</p>
+    {% endif %}
+
+    {% if e[7] %}
+        <p><strong>What story is your mind telling you?</strong><br>{{ e[7] }}</p>
+    {% endif %}
+
+    {% if e[8] %}
+        <p><strong>What are you feeling in one word?</strong><br>{{ e[8] }}</p>
+    {% endif %}
+
+    {% if e[9] %}
+        <p><strong>How strong are your feelings for them right now? (1–10)</strong><br>{{ e[9] }}/10</p>
+    {% endif %}
+
+    {% if e[10] %}
+        <p><strong>Where do you think this is coming from?</strong><br>{{ e[10] }}</p>
+    {% endif %}
+
+    {% if e[11] %}
+        <p><strong>What do you want to tell this person?</strong><br>{{ e[11] }}</p>
+    {% endif %}
+
+    {% if e[12] %}
+        <p><strong>What will you do instead, right now?</strong><br>{{ e[12] }}</p>
+    {% endif %}
+
+    {% if e[13] %}
+        <p><strong>What would your future self say?</strong><br>{{ e[13] }}</p>
+    {% endif %}
+
+    <a class="button-link" href="/edit/{{ e[0] }}">Edit</a>
 
     <form method="POST" action="/delete/{{ e[0] }}">
-    <button type="submit" onclick="return confirm('Delete this entry?');">
-        Delete
-    </button>
-</form>
+        <button type="submit" onclick="return confirm('Delete this entry?');">
+            Delete
+        </button>
+    </form>
 
 </div>
 
@@ -49,4 +95,5 @@
     <p>No entries yet. Start with one honest sentence.</p>
 </div>
 {% endfor %}
+
 {% endblock %}

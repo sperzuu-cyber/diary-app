@@ -63,6 +63,11 @@ def init_db():
     except sqlite3.OperationalError:
         pass
 
+    try:
+        c.execute("ALTER TABLE entries ADD COLUMN image_caption TEXT")
+    except sqlite3.OperationalError:
+        pass
+
     conn.commit()
     conn.close()
 
@@ -148,8 +153,8 @@ def new_entry():
         c.execute("""
             INSERT INTO entries (
                 user_id, time, day, mood, okay, trigger, thought, feeling,
-                signal, source, loop, redirect, lesson, visibility, image
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                signal, source, loop, redirect, lesson, visibility, image, image_caption
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             current_user.id,
             datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -165,7 +170,8 @@ def new_entry():
             request.form["redirect"],
             request.form["lesson"],
             request.form["visibility"],
-            image_filename
+            image_filename,
+            request.form.get("image_caption", "")
         ))
 
         conn.commit()
@@ -258,6 +264,48 @@ def edit_entry(entry_id):
     conn.close()
     return render_template("edit.html", entry=entry)
 
+@app.route("/upload-photo", methods=["POST"])
+@login_required
+def upload_photo():
+    photo = request.files.get("photo")
+    photo_note = request.form.get("photo_note")
+
+    if photo and photo.filename != "":
+        filename = secure_filename(photo.filename)
+        photo_path = os.path.join(app.config["UPLOAD_FOLDER"], filename)
+        photo.save(photo_path)
+
+        conn = db()
+        c = conn.cursor()
+
+        c.execute("""
+            INSERT INTO entries (
+                user_id, time, day, mood, okay, trigger, thought, feeling,
+                signal, source, loop, redirect, lesson, visibility, image, image_caption
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (
+            current_user.id,
+            datetime.now().strftime("%Y-%m-%d %H:%M"),
+            "Photo upload",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "private",
+            filename,
+            photo_note
+        ))
+
+        conn.commit()
+        conn.close()
+
+    return redirect(url_for("entries"))
 
 @app.route("/dashboard")
 @login_required
