@@ -1,21 +1,16 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% extends "base.html" %}
 
-<div class="nav">
-    <strong>Break Loop Diary</strong>
-    <div>
-        <a href="/new">New Entry</a>
-        <a href="/public">Public</a>
-        <a href="/logout">Logout</a>
-    </div>
-</div>
-
-<div class="container">
+{% block content %}
     <h1>My Entries</h1>
 
 {% for e in entries %}
 <div class="card">
     <span class="badge">{{ e[15] }}</span>
     <p class="small">{{ e[1] }}</p>
+
+{% if e[16] %}
+    <img src="{{ url_for('static', filename='uploads/' + e[16]) }}" class="entry-image">
+{% endif %}
 
     <p><strong>What happened today that stuck with you?</strong><br>{{ e[2] }}</p>
 
@@ -28,16 +23,18 @@
     <p><strong>What story is your mind telling you?</strong><br>{{ e[6] }}</p>
 
     <p><strong>What are you feeling in one word?</strong><br>{{ e[7] }}</p>
-
-    <p><strong>How strong is the signal? (1–10)</strong><br>{{ e[8] }}/10</p>
+<!-- how strong are the signals changed to how strong are the feelings -->
+    <p><strong>How strong are your feelings for them right now? (1–10)</strong><br>{{ e[8] }}/10</p>
 
     <p><strong>Where do you think this is coming from?</strong><br>{{ e[9] }}</p>
-
-    <p><strong>What pattern is repeating here?</strong><br>{{ e[10] }}</p>
+<!-- what pattern changed to what do you want to tell this person -->
+    <p><strong>What do you want to tell this person?</strong><br>{{ e[10] }}</p>
 
     <p><strong>What will you do instead, right now?</strong><br>{{ e[11] }}</p>
 
     <p><strong>What would your future self say?</strong><br>{{ e[12] }}</p>
+    
+    <a class="button-link" href="/edit/{{ e[0] }}">Edit</a>    
 
     <form method="POST" action="/delete/{{ e[0] }}">
     <button type="submit" onclick="return confirm('Delete this entry?');">
@@ -52,3 +49,4 @@
     <p>No entries yet. Start with one honest sentence.</p>
 </div>
 {% endfor %}
+{% endblock %}

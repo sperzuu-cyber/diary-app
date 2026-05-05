@@ -1,25 +1,16 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% extends "base.html" %}
 
-<div class="nav">
-    <strong>Break Loop Diary</strong>
-    <div>
-        <a href="/entries">My Entries</a>
-        <a href="/public">Public</a>
-        <a href="/logout">Logout</a>
-    </div>
-</div>
-
-<div class="container">
+{% block content %}
     <div class="card">
         <h1>New Entry</h1>
         <p class="small">Turn the noise into data. Then redirect.</p>
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <label>What happened today that stuck with you?</label>
             <textarea name="day"></textarea>
 
             <label>Rate your mood? (1–10)</label>
-            <input name="mood">
+            <input type="number" name="mood" min="1" max="10" required>
 
             <label>Are you grounded right now?</label>
             <input name="okay">
@@ -32,14 +23,14 @@
 
             <label>What are you feeling in one word?</label>
             <input name="feeling">
-
-            <label>How strong is the signal? (1–10)</label>
-            <input name="signal">
+<!-- Changed signal to how strong are your feelings -->
+            <label>How strong are your feelings for this person? (1–10)</label>
+            <input type="number" name="signal" min="1" max="10">
 
             <label>Where do you think this is coming from?</label>
             <input name="source">
-
-            <label>What pattern is repeating here?</label>
+<!-- changed pattern to what do you want to tell this person -->
+            <label>What do you want to tell this person?</label>
             <textarea name="loop"></textarea>
 
             <label>What will you do instead, right now?</label>
@@ -47,6 +38,9 @@
 
             <label>What would your future self say?</label>
             <textarea name="lesson"></textarea>
+            
+            <label>Upload image</label>
+            <input type="file" name="image" accept="image/*">
 
             <label>Visibility</label>
             <select name="visibility">
@@ -54,7 +48,7 @@
                 <option value="public">Public</option>
             </select>
 
-            <button>Break the Loop</button>
+            <button type="submit" class="primary-btn">Save Entry</button>
         </form>
     </div>
-</div>
+{% endblock %}

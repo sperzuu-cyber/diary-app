@@ -1,21 +1,12 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% extends "base.html" %}
 
-<div class="nav">
-    <strong>Public Break Loops</strong>
-    <div>
-        <a href="/entries">My Entries</a>
-        <a href="/new">New Entry</a>
-        <a href="/login">Login</a>
-    </div>
-</div>
-
-<div class="container">
+{% block content %}
     <h1>Public Entries</h1>
     <p class="small">Shared reflections from people choosing to break the loop.</p>
 
 {% for e in entries %}
 <div class="card">
-    <span class="badge">{{ e[15] }}</span>
+    <span class="badge">{{ e[14] }}</span>
     <p class="small">{{ e[1] }}</p>
 
     <p><strong>What happened today that stuck with you?</strong><br>{{ e[2] }}</p>
@@ -30,11 +21,11 @@
 
     <p><strong>What are you feeling in one word?</strong><br>{{ e[7] }}</p>
 
-    <p><strong>How strong is the signal? (1–10)</strong><br>{{ e[8] }}/10</p>
+    <p><strong>How strong are your feelings for this person? (1–10)</strong><br>{{ e[8] }}/10</p>
 
     <p><strong>Where do you think this is coming from?</strong><br>{{ e[9] }}</p>
 
-    <p><strong>What pattern is repeating here?</strong><br>{{ e[10] }}</p>
+    <p><strong>What do you want to tell this person?</strong><br>{{ e[10] }}</p>
 
     <p><strong>What will you do instead, right now?</strong><br>{{ e[11] }}</p>
 
@@ -45,3 +36,4 @@
     <p>No entries yet. Start with one honest sentence.</p>
 </div>
 {% endfor %}
+{% endblock %}

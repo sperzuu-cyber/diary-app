@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for
+import os
+from werkzeug.utils import secure_filename
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import sqlite3
@@ -6,6 +8,10 @@ from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "change-this-to-something-random"
+UPLOAD_FOLDER = "static/uploads"
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -33,6 +39,30 @@ def init_db():
     """)
 
     c.execute("""
+    CREATE TABLE IF NOT EXISTS entries (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        time TEXT,
+        day TEXT,
+        mood TEXT,
+        okay TEXT,
+        trigger TEXT,
+        thought TEXT,
+        feeling TEXT,
+        signal TEXT,
+        source TEXT,
+        loop TEXT,
+        redirect TEXT,
+        lesson TEXT,
+        visibility TEXT
+    )
+""")
+
+def init_db():
+    conn = db()
+    c = conn.cursor()
+
+    c.execute("""
         CREATE TABLE IF NOT EXISTS entries (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER,
@@ -51,6 +81,11 @@ def init_db():
             visibility TEXT
         )
     """)
+
+    try:
+        c.execute("ALTER TABLE entries ADD COLUMN image TEXT")
+    except sqlite3.OperationalError:
+        pass
 
     conn.commit()
     conn.close()
@@ -126,11 +161,19 @@ def new_entry():
         conn = db()
         c = conn.cursor()
 
+        image_file = request.files.get("image")
+        image_filename = None
+
+        if image_file and image_file.filename != "":
+            image_filename = secure_filename(image_file.filename)
+            image_path = os.path.join(app.config["UPLOAD_FOLDER"], image_filename)
+            image_file.save(image_path)
+
         c.execute("""
             INSERT INTO entries (
                 user_id, time, day, mood, okay, trigger, thought, feeling,
-                signal, source, loop, redirect, lesson, visibility
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                signal, source, loop, redirect, lesson, visibility, image
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """, (
             current_user.id,
             datetime.now().strftime("%Y-%m-%d %H:%M"),
@@ -145,7 +188,8 @@ def new_entry():
             request.form["loop"],
             request.form["redirect"],
             request.form["lesson"],
-            request.form["visibility"]
+            request.form["visibility"],
+            image_filename
         ))
 
         conn.commit()
@@ -194,6 +238,94 @@ def delete_entry(entry_id):
     conn.close()
 
     return redirect(url_for("entries"))
+
+@app.route("/edit/<int:entry_id>", methods=["GET", "POST"])
+@login_required
+def edit_entry(entry_id):
+    conn = db()
+    c = conn.cursor()
+
+    c.execute("SELECT * FROM entries WHERE id = ? AND user_id = ?", (entry_id, current_user.id))
+    entry = c.fetchone()
+
+    if not entry:
+        conn.close()
+        return redirect(url_for("entries"))
+
+    if request.method == "POST":
+        c.execute("""
+            UPDATE entries
+            SET day = ?, mood = ?, okay = ?, trigger = ?, thought = ?, feeling = ?,
+                signal = ?, source = ?, loop = ?, redirect = ?, lesson = ?, visibility = ?
+            WHERE id = ? AND user_id = ?
+        """, (
+            request.form["day"],
+            request.form["mood"],
+            request.form["okay"],
+            request.form["trigger"],
+            request.form["thought"],
+            request.form["feeling"],
+            request.form["signal"],
+            request.form["source"],
+            request.form["loop"],
+            request.form["redirect"],
+            request.form["lesson"],
+            request.form["visibility"],
+            entry_id,
+            current_user.id
+        ))
+
+        conn.commit()
+        conn.close()
+        return redirect(url_for("entries"))
+
+    conn.close()
+    return render_template("edit.html", entry=entry)
+
+
+@app.route("/dashboard")
+@login_required
+def dashboard():
+    conn = db()
+    c = conn.cursor()
+
+    c.execute("SELECT COUNT(*) FROM entries WHERE user_id = ?", (current_user.id,))
+    total_entries = c.fetchone()[0]
+
+    c.execute("""
+        SELECT ROUND(AVG(CAST(mood AS INTEGER)), 1)
+        FROM entries 
+        WHERE user_id = ? AND mood != ''
+    """, (current_user.id,))
+    average_mood = c.fetchone()[0]
+
+    c.execute("""
+        SELECT trigger, COUNT(*) as count
+        FROM entries
+        WHERE user_id = ? AND trigger != ''
+        GROUP BY trigger
+        ORDER BY count DESC
+        LIMIT 1
+    """, (current_user.id,))
+    common_trigger = c.fetchone()
+
+    c.execute("""
+        SELECT visibility, COUNT(*)
+        FROM entries
+        WHERE user_id = ?
+        GROUP BY visibility
+    """, (current_user.id,))
+    visibility_stats = c.fetchall()
+
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        total_entries=total_entries,
+        average_mood=average_mood,
+        common_trigger=common_trigger,
+        visibility_stats=visibility_stats
+    )
 
 if __name__ == "__main__":
     init_db()
