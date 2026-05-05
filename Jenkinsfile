@@ -12,7 +12,7 @@ pipeline {
         stage('Deploy code to app folder') {
             steps {
                 sh '''
-                rsync -av --delete \
+                sudo rsync -av --delete \
                 --exclude 'venv' \
                 --exclude 'diary.db' \
                 --exclude 'static/uploads' \
@@ -21,7 +21,7 @@ pipeline {
             }
         }
 
-        stage('Restart app with systemd') {
+        stage('Restart app') {
             steps {
                 sh '''
                 sudo /bin/systemctl restart diary-app
@@ -29,7 +29,7 @@ pipeline {
             }
         }
 
-        stage('Check app is running') {
+        stage('Check app') {
             steps {
                 sh '''
                 sleep 3
