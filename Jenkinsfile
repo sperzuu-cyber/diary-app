@@ -2,23 +2,34 @@ pipeline {
     agent any
 
     stages {
-        stage('Pull Code') {
+        stage('Checkout latest code') {
             steps {
-                checkout scm
+                git branch: 'main',
+                    url: 'https://github.com/sperzuu-cyber/diary-app.git'
             }
         }
 
-        stage('Install') {
-            steps {
-                sh 'pip3 install -r requirements.txt'
-            }
-        }
-
-        stage('Deploy') {
+        stage('Install requirements') {
             steps {
                 sh '''
-                sudo fuser -k 5000/tcp || true
-                nohup python3 app.py > app.log 2>&1 &
+                /home/ubuntu/diary-app/venv/bin/pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('Deploy with systemd') {
+            steps {
+                sh '''
+                sudo systemctl restart diary-app
+                '''
+            }
+        }
+
+        stage('Check app is running') {
+            steps {
+                sh '''
+                sleep 3
+                curl -f http://localhost:5000
                 '''
             }
         }
