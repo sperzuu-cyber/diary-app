@@ -9,14 +9,6 @@ pipeline {
             }
         }
 
-        stage('Install requirements') {
-            steps {
-                sh '''
-                /home/ubuntu/diary-app/venv/bin/pip install -r requirements.txt
-                '''
-            }
-        }
-
         stage('Deploy with systemd') {
             steps {
                 sh '''
